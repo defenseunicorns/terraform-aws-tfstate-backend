@@ -141,12 +141,13 @@ jobs:
         run: |
           make docker-load-build-harness
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-          role-session-name: ${{ github.event.client_payload.pull_request.head.sha || github.sha }}
-          aws-region: us-east-1
+# TODO: Uncomment this step once we have an AWS role we are able to assume
+#      - name: Configure AWS Credentials
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+#          role-session-name: ${{ github.event.client_payload.pull_request.head.sha || github.sha }}
+#          aws-region: us-east-1
 
       - name: "Run E2E tests"
         env:

@@ -68,7 +68,7 @@ resource "aws_s3_bucket_logging" "logging" {
 }
 
 data "template_file" "backend_bucket_policy" {
-  template = file("${path.module}/templates/backend_bucket_policy.json.tpl")
+  template = file("${path.module}/templates/backend_bucket_bucket_policy.json.tpl")
   vars = {
     admin_arns = jsonencode(var.admin_arns)
   }

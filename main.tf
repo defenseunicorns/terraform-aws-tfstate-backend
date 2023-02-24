@@ -67,48 +67,16 @@ resource "aws_s3_bucket_logging" "logging" {
   target_prefix = "log/"
 }
 
+data "template_file" "backend_bucket_policy" {
+  template = file("${path.module}/templates/backend_bucket_policy.json.tpl")
+  vars = {
+    admin_arns = jsonencode(var.admin_arns)
+  }
+}
+
 resource "aws_s3_bucket_policy" "backend_bucket" {
   count  = local.create_bucket_policy ? 1 : 0
   bucket = module.s3_bucket.s3_bucket_id
 
-  policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": ${jsonencode(var.admin_arns)}
-      },
-      "Action": [
-		"s3:ListBucket",
-        "s3:GetObject",
-        "s3:PutObject"
-      ],
-      "Resource": [
-        "${module.s3_bucket.s3_bucket_arn}/*",
-        "${module.s3_bucket.s3_bucket_arn}"
-      ],
-      "Condition": {
-        "Bool": {
-          "aws:SecureTransport": "false"
-        }
-      }
-    },
-    {
-      "NotPrincipal": {
-        "AWS": ${jsonencode(var.admin_arns)}
-      },
-      "Action": [
-				"s3:*"
-      ],
-      "Resource": [
-        "${module.s3_bucket.s3_bucket_arn}/*",
-        "${module.s3_bucket.s3_bucket_arn}"
-      ],
-      "Effect": "Deny"
-    }
-  ]
-}
-POLICY
+  policy = data.template_file.backend_bucket_policy.rendered
 }

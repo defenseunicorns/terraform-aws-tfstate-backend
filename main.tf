@@ -1,3 +1,7 @@
+locals {
+  create_bucket_policy = length(var.admin_arns) > 0 ? true : false
+}
+
 data "aws_partition" "current" {}
 
 resource "aws_kms_key" "objects" {
@@ -64,6 +68,7 @@ resource "aws_s3_bucket_logging" "logging" {
 }
 
 resource "aws_s3_bucket_policy" "backend_bucket" {
+  count  = local.create_bucket_policy ? 1 : 0
   bucket = module.s3_bucket.s3_bucket_id
 
   policy = <<POLICY
@@ -73,11 +78,11 @@ resource "aws_s3_bucket_policy" "backend_bucket" {
     {
       "Effect": "Allow",
       "Principal": {
-        "AWS": ${var.cluster_key_admin_arns == [] ? "[]" : jsonencode(var.cluster_key_admin_arns)}
+        "AWS": ${jsonencode(var.admin_arns)}
       },
       "Action": [
-				"s3:ListBucket",
-				"s3:GetObject",
+		"s3:ListBucket",
+        "s3:GetObject",
         "s3:PutObject"
       ],
       "Resource": [
@@ -92,7 +97,7 @@ resource "aws_s3_bucket_policy" "backend_bucket" {
     },
     {
       "NotPrincipal": {
-        "AWS": ${var.cluster_key_admin_arns == [] ? "[]" : jsonencode(var.cluster_key_admin_arns)}
+        "AWS": ${jsonencode(var.admin_arns)}
       },
       "Action": [
 				"s3:*"

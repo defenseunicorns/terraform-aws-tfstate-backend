@@ -29,8 +29,8 @@
       "s3:*"
     ],
     "Resource": [
-      "${module.s3_bucket.s3_bucket_arn}/*",
-      "${module.s3_bucket.s3_bucket_arn}"
+      "${s3_bucket_arn}/*",
+      "${s3_bucket_arn}"
     ],
     "Effect": "Deny"
     }

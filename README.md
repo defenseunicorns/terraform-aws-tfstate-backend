@@ -5,10 +5,10 @@ Reusable Terraform module that creates a Terraform Remote Backend via AWS S3 and
 This repository contains Terraform configuration files that create various AWS resources, such as an S3 bucket, a DynamoDB table, and KMS keys. These resources are configured to hold store your terraform TFSTATE files.
 
 
-## Getting Started 
+## Getting Started
 
 Ensure Terraform is available on the local system and that the AWS CLI has the appropriate credentials put in place.
- 
+
 ### Examples
 
 To view examples for how you can leverage this tfstate-backend Module, please see the [examples](./examples) directory.

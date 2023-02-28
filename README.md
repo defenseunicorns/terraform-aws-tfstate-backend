@@ -11,38 +11,7 @@ Ensure Terraform is available on the local system and that the AWS CLI has the a
  
 ### Examples
 
-To view examples for how you can leverage this tfstate-backend Module, please see the [examples](./examples) directory or reference the following example module use.
-
-```terraform
-terraform {
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-    }
-  }
-  required_version = ">= 1.2"
-}
-
-provider "aws" {
-  region = "us-east-2"
-}
-
-module "tfstate" {
-  source = "git::https://github.com/defenseunicorns/terraform-aws-tfstate-backend.git?ref=main"
-
-  # admin_arns = []
-  bucket_prefix       = "zarfinit"
-  dynamodb_table_name = "zarfinit"
-  # permissions_boundary = 
-  region             = "us-east-2"
-  versioning_enabled = false
-
-}
-
-output "state_out" {
-  value = module.tfstate
-}
-```
+To view examples for how you can leverage this tfstate-backend Module, please see the [examples](./examples) directory.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements

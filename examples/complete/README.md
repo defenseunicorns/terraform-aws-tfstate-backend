@@ -12,7 +12,7 @@ Standard Terraform Workflow
 1. Run `terraform init`.
 1. Verify with `terraform plan`.
 1. Deploy with `terraform apply`
-1. Delete with `terraform delete`
+1. Delete with `terraform destroy`
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements

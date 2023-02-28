@@ -10,7 +10,7 @@ Standard Terraform Workflow
 1. Ensure AWS CLI is configured (AWS Profile, temporary assume role, or setting environment variable).
 1. Change variables in `example.tfvars`.
 1. Run `terraform init`.
-1. Verify with `terraform plan`.
+1. Verify with `terraform plan`
 1. Deploy with `terraform apply`
 1. Delete with `terraform destroy`
 

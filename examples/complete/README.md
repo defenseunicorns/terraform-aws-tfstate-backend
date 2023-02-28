@@ -1,17 +1,18 @@
-# terraform-aws-tfstate-backend
+# Complete Example
 
-Reusable Terraform module that creates a Terraform Remote Backend via AWS S3 and AWS DynamoDB.
+This example should create an S3 bucket bucket and DynamoDB table.
 
-This repository contains Terraform configuration files that create various AWS resources, such as an S3 bucket, a DynamoDB table, and KMS keys. These resources are configured to hold store your terraform TFSTATE files.
+## Example Steps
 
-
-## Getting Started
-
-Ensure Terraform is available on the local system and that the AWS CLI has the appropriate credentials put in place.
-
-### Examples
-
-To view examples for how you can leverage this tfstate-backend Module, please see the [examples](./examples) directory.
+Standard Terraform Workflow
+1. Checkout this code.
+1. Change Directory to this folder.
+1. Ensure AWS CLI is configured (AWS Profile, temporary assume role, or setting environment variable).
+1. Change variables in `example.tfvars`.
+1. Run `terraform init`.
+1. Verify with `terraform plan`
+1. Deploy with `terraform apply`
+1. Delete with `terraform destroy`
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -23,26 +24,18 @@ No requirements.
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
-| <a name="provider_template"></a> [template](#provider\_template) | n/a |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_s3_bucket"></a> [s3\_bucket](#module\_s3\_bucket) | terraform-aws-modules/s3-bucket/aws | v3.6.0 |
+| <a name="module_tfstate_backend"></a> [tfstate\_backend](#module\_tfstate\_backend) | ../.. | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [aws_dynamodb_table.dynamodb_terraform_state_lock](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dynamodb_table) | resource |
-| [aws_kms_key.dynamo](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
-| [aws_kms_key.objects](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
-| [aws_s3_bucket_logging.logging](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_logging) | resource |
-| [aws_s3_bucket_policy.backend_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
-| [aws_s3_bucket_versioning.versioning](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_versioning) | resource |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
-| [template_file.backend_bucket_policy](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 
 ## Inputs
 

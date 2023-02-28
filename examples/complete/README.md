@@ -2,7 +2,7 @@
 
 This example should create an S3 bucket bucket and DynamoDB table. 
 
-## Steps
+## Example Steps
 
 Standard Terraform Workflow 
 1. Checkout this code. 

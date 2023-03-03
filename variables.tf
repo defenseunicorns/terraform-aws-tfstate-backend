@@ -36,3 +36,9 @@ variable "force_destroy" {
   type        = bool
   default     = false
 }
+
+variable "tags" {
+  description = "(Optional) A mapping of tags to assign kms and bucket resources."
+  type        = map(string)
+  default     = {}
+}

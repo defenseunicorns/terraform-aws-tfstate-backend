@@ -32,6 +32,8 @@ resource "aws_dynamodb_table" "dynamodb_terraform_state_lock" {
     enabled     = true
     kms_key_arn = aws_kms_key.dynamo.arn
   }
+
+  tags = var.tags
 }
 
 module "s3_bucket" {

@@ -8,11 +8,13 @@ resource "aws_kms_key" "objects" {
   enable_key_rotation     = true
   description             = "KMS key is used to encrypt bucket objects"
   deletion_window_in_days = 7
+  tags                    = var.tags
 }
 resource "aws_kms_key" "dynamo" {
   enable_key_rotation     = true
   description             = "KMS key is used to encrypt dynamodb table"
   deletion_window_in_days = 7
+  tags                    = var.tags
 }
 
 resource "aws_dynamodb_table" "dynamodb_terraform_state_lock" {
@@ -30,6 +32,8 @@ resource "aws_dynamodb_table" "dynamodb_terraform_state_lock" {
     enabled     = true
     kms_key_arn = aws_kms_key.dynamo.arn
   }
+
+  tags = var.tags
 }
 
 module "s3_bucket" {
@@ -42,6 +46,8 @@ module "s3_bucket" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 
+  force_destroy = var.force_destroy
+  tags          = var.tags
   server_side_encryption_configuration = {
     rule = {
       apply_server_side_encryption_by_default = {

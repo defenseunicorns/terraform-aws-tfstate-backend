@@ -73,17 +73,13 @@ resource "aws_s3_bucket_logging" "logging" {
   target_prefix = "log/"
 }
 
-data "template_file" "backend_bucket_policy" {
-  template = file("${path.module}/templates/backend_bucket_bucket_policy.json.tpl")
-  vars = {
-    admin_arns    = jsonencode(var.admin_arns)
-    s3_bucket_arn = module.s3_bucket.s3_bucket_arn
-  }
-}
-
 resource "aws_s3_bucket_policy" "backend_bucket" {
   count  = local.create_bucket_policy ? 1 : 0
   bucket = module.s3_bucket.s3_bucket_id
 
-  policy = data.template_file.backend_bucket_policy.rendered
+  # policy = data.template_file.backend_bucket_policy.rendered
+  policy = templatefile("${path.module}/templates/backend_bucket_bucket_policy.json.tpl", {
+    admin_arns    = jsonencode(var.admin_arns)
+    s3_bucket_arn = module.s3_bucket.s3_bucket_arn
+  })
 }

@@ -1,4 +1,4 @@
-region               = "us-gov-east-1"
+region               = "us-east-1"
 bucket_prefix        = "uds-ex"
 dynamodb_table_name  = "uds-ex-lock"
 versioning_enabled   = true

@@ -91,7 +91,7 @@ module "s3_bucket_logging" {
   source  = "terraform-aws-modules/s3-bucket/aws"
   version = "v3.6.0"
 
-  bucket_prefix           = "s3-bucket-logging"
+  bucket_prefix           = "${var.bucket_prefix}-logging"
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true

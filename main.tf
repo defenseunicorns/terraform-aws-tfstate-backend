@@ -4,6 +4,8 @@ locals {
 
 data "aws_partition" "current" {}
 
+data "aws_caller_identity" "current" {}
+
 resource "aws_kms_key" "objects" {
   enable_key_rotation     = true
   description             = "KMS key is used to encrypt bucket objects"
@@ -69,8 +71,8 @@ resource "aws_s3_bucket_versioning" "versioning" {
 resource "aws_s3_bucket_logging" "logging" {
   bucket = module.s3_bucket.s3_bucket_id
 
-  target_bucket = module.s3_bucket.s3_bucket_id
-  target_prefix = "log/"
+  target_bucket = module.s3_bucket_logging.s3_bucket_id
+  target_prefix = "tf-state-backend-log/"
 }
 
 resource "aws_s3_bucket_policy" "backend_bucket" {
@@ -80,5 +82,47 @@ resource "aws_s3_bucket_policy" "backend_bucket" {
   policy = templatefile("${path.module}/templates/backend_bucket_bucket_policy.json.tpl", {
     admin_arns    = jsonencode(var.admin_arns)
     s3_bucket_arn = module.s3_bucket.s3_bucket_arn
+  })
+}
+
+###S3 Bucket for Logging other S3 Buckets###
+module "s3_bucket_logging" {
+  # count = var.bucket_logging_enabled ? 1 : 0
+  source  = "terraform-aws-modules/s3-bucket/aws"
+  version = "v3.6.0"
+
+  bucket_prefix           = "s3-bucket-logging"
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+
+  force_destroy = var.force_destroy
+  tags          = var.tags
+  server_side_encryption_configuration = {
+    rule = {
+      apply_server_side_encryption_by_default = {
+        kms_master_key_id = aws_kms_key.objects.arn
+        sse_algorithm     = "aws:kms"
+      }
+    }
+  }
+}
+
+resource "aws_s3_bucket_versioning" "logging_versioning" {
+  count  = var.versioning_enabled ? 1 : 0
+  bucket = module.s3_bucket_logging.s3_bucket_id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_policy" "logging_bucket" {
+  bucket = module.s3_bucket_logging.s3_bucket_id
+
+  policy = templatefile("${path.module}/templates/logging_bucket_bucket_policy.json.tpl", {
+    admin_arns    = jsonencode(var.admin_arns)
+    s3_bucket_logging_arn = module.s3_bucket_logging.s3_bucket_arn
+    aws_account_id = data.aws_caller_identity.current.account_id
   })
 }

@@ -121,8 +121,8 @@ resource "aws_s3_bucket_policy" "logging_bucket" {
   bucket = module.s3_bucket_logging.s3_bucket_id
 
   policy = templatefile("${path.module}/templates/logging_bucket_bucket_policy.json.tpl", {
-    admin_arns    = jsonencode(var.admin_arns)
+    admin_arns            = jsonencode(var.admin_arns)
     s3_bucket_logging_arn = module.s3_bucket_logging.s3_bucket_arn
-    aws_account_id = data.aws_caller_identity.current.account_id
+    aws_account_id        = data.aws_caller_identity.current.account_id
   })
 }

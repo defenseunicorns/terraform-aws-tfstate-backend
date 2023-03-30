@@ -23,7 +23,7 @@ No requirements.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.60.0 |
 
 ## Modules
 
@@ -52,6 +52,7 @@ No requirements.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_s3_logging_bucket_id"></a> [s3\_logging\_bucket\_id](#output\_s3\_logging\_bucket\_id) | S3 Logging Bucket Name |
 | <a name="output_tfstate_bucket_id"></a> [tfstate\_bucket\_id](#output\_tfstate\_bucket\_id) | Terraform State Bucket Name |
 | <a name="output_tfstate_dynamodb_table_name"></a> [tfstate\_dynamodb\_table\_name](#output\_tfstate\_dynamodb\_table\_name) | Terraform State DynamoDB Table Name |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

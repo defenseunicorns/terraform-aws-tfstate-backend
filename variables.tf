@@ -13,6 +13,17 @@ variable "dynamodb_table_name" {
   type        = string
 }
 
+variable "bucket_logging_enabled" {
+  description = "Enable logging on the S3 bucket"
+  type        = bool
+  default     = true
+}
+
+variable "logging_bucket_id" {
+  description = "S3 Bucket ID for logging"
+  type        = string
+}
+
 variable "versioning_enabled" {
   description = "Enable versioning on the S3 bucket"
   type        = bool

@@ -4,7 +4,7 @@ output "tfstate_bucket_id" {
 }
 
 output "s3_logging_bucket_id" {
-  value       = module.tfstate_backend.s3_logging_bucket_id
+  value       = module.s3_bucket_logging[0].s3_bucket_id
   description = "S3 Logging Bucket Name"
 }
 

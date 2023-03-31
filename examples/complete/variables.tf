@@ -8,6 +8,12 @@ variable "bucket_prefix" {
   type        = string
 }
 
+variable "bucket_logging_enabled" {
+  description = "Enable logging on the S3 bucket"
+  type        = bool
+  default     = true
+}
+
 variable "dynamodb_table_name" {
   description = "DynamoDB Table Name"
   type        = string
@@ -29,4 +35,16 @@ variable "permissions_boundary" {
   description = "(Optional) The ARN of the policy that is used to set the permissions boundary for the role."
   type        = string
   default     = ""
+}
+
+variable "force_destroy" {
+  description = "(Optional, Default:false ) A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable."
+  type        = bool
+  default     = false
+}
+
+variable "tags" {
+  description = "(Optional) A mapping of tags to assign kms and bucket resources."
+  type        = map(string)
+  default     = {}
 }

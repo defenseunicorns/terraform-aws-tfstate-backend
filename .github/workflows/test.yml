@@ -12,12 +12,10 @@ permissions:
   contents: read
 
 jobs:
-  # Run the E2E tests
   e2e:
     runs-on: ubuntu-latest
     steps:
-      # Checkout the code from GitHub Pull Request
-      - name: "Checkout the code"
+      - name: Checkout the code
         uses: actions/checkout@v3
 
       - name: Configure AWS Credentials

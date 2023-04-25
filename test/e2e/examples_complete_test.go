@@ -1,13 +1,14 @@
 package test_test
 
 import (
-	"github.com/gruntwork-io/terratest/modules/terraform"
-	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+
+	"github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestExamplesComplete(t *testing.T) {
+func TestStateBackend(t *testing.T) {
 	t.Parallel()
 	terraformOptions := &terraform.Options{
 		TerraformDir: "../../examples/complete",

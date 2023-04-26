@@ -4,12 +4,6 @@ BUILD_HARNESS_VERSION := 0.0.7
 
 .DEFAULT_GOAL := help
 
-# Optionally add the "-it" flag for docker run commands if the env var "CI" is not set (meaning we are on a local machine and not in github actions)
-TTY_ARG :=
-ifndef CI
-	TTY_ARG := -it
-endif
-
 # Silent mode by default. Run `make VERBOSE=1` to turn off silent mode.
 ifndef VERBOSE
 .SILENT:
@@ -24,22 +18,11 @@ help: ## Show a list of all targets
 	| sed -n 's/^\(.*\): \(.*\)##\(.*\)/\1:\3/p' \
 	| column -t -s ":"
 
+# The '-count=1' flag is used to bypass using cached Go dependencies. When running the tests locally, using cached dependencies can result in uncaught problems.
 .PHONY: test
 test: ## Run all automated tests. Requires access to an AWS account. Costs real money.
-	mkdir -p .cache/go
-	mkdir -p .cache/go-build
-	echo "Running automated tests. This will take several minutes. At times it does not log anything to the console. If you interrupt the test run you will need to log into AWS console and manually delete any orphaned infrastructure."
-	docker run $(TTY_ARG) --rm -v "${PWD}:/app" -v "${PWD}/.cache/go:/root/go" -v "${PWD}/.cache/go-build:/root/.cache/go-build" --workdir "/app/test/e2e" -e GOPATH=/root/go -e GOCACHE=/root/.cache/go-build -e REPO_URL -e GIT_BRANCH -e AWS_REGION -e AWS_DEFAULT_REGION -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -e AWS_SECURITY_TOKEN -e AWS_SESSION_EXPIRATION -e SKIP_SETUP -e SKIP_TEST -e SKIP_TEARDOWN $(BUILD_HARNESS_REPO):$(BUILD_HARNESS_VERSION) bash -c 'asdf install && go test -v -timeout 2h ./...'
-
-.PHONY: docker-save-build-harness
-docker-save-build-harness: ## Pulls the build harness docker image and saves it to a tarball
-	mkdir -p .cache/docker
-	docker pull $(BUILD_HARNESS_REPO):$(BUILD_HARNESS_VERSION)
-	docker save -o .cache/docker/build-harness.tar $(BUILD_HARNESS_REPO):$(BUILD_HARNESS_VERSION)
-
-.PHONY: docker-load-build-harness
-docker-load-build-harness: ## Loads the saved build harness docker image
-	docker load -i .cache/docker/build-harness.tar
+	echo "==> Running automated tests. At times it does not log anything to the console. If you interrupt the test run you will need to log into AWS console and manually delete any orphaned infrastructure. <==="
+	go test -count=1 ./... -v
 
 .PHONY: run-pre-commit-hooks
 run-pre-commit-hooks: ## Run all pre-commit hooks. Returns nonzero exit code if any hooks fail. Uses Docker for maximum compatibility

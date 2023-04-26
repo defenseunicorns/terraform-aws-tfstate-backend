@@ -31,5 +31,5 @@ jobs:
           go-version-file: go.mod
 
       - name: Run E2E tests
-        run: go test ./... -v
+        run: make test
         

@@ -1,7 +1,7 @@
 # Attribution for a bunch of this goes to CloudPosse
 # https://github.com/cloudposse/actions/blob/master/.github/workflows/test-command.yml
 
-name: test
+name: test-exp
 on:
   repository_dispatch:
     types: [test-command]
@@ -45,7 +45,7 @@ jobs:
           printf "Event name is %s\n" "$EVENT_NAME"
           printf "Args are %s\n" "$ARGS"
           printf "\n\nslash_command is %s\n\n" "$DEBUG"
-          COMMANDS=(PING e3e)
+          COMMANDS=(PING E3E)
           if printf "%s" "${ARGS^^}" | grep -qE '\bALL\b'; then
             # "all" explicitly does not include "ping"
             for cmd in "${COMMANDS[@]}"; do

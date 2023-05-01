@@ -38,7 +38,7 @@ resource "aws_dynamodb_table" "dynamodb_terraform_state_lock" {
 
 module "s3_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "v3.6.0"
+  version = "v3.10.1"
 
   bucket_prefix           = var.bucket_prefix
   block_public_acls       = true

@@ -1,7 +1,10 @@
 #!/bin/bash
 
-terraform state pull > terraform.tfstat
-rm -rf backend.tf .terraform/terraform.tfstat
-terraform init # needed after removing backend
+rm -rf .terraform* terraform.tfstate*
+terraform init
+terraform state pull > terraform.tfstate
+cp terraform.tfstate protection.terraform.tfstate
+mv backend.tf backend.tf.bk
+terraform init -force-copy # needed after removing backend
 terraform destroy --auto-approve
-rm -rf backend.tf terraform.* .terraform
+rm -rf terraform.tfstate* .terraform

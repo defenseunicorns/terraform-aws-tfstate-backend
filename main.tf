@@ -1,5 +1,12 @@
 locals {
   create_bucket_policy = length(var.admin_arns) > 0 ? true : false
+  backend_content = {
+
+    region               = var.region
+    bucket               = module.s3_bucket.s3_bucket_id
+    terraform_state_file = "tfstate/${var.region}/${var.bucket_prefix}-bucket.tfstate"
+    dynamodb_table       = aws_dynamodb_table.dynamodb_terraform_state_lock.id
+  }
 }
 
 data "aws_partition" "current" {}
@@ -18,7 +25,8 @@ resource "aws_kms_key" "dynamo" {
 }
 
 resource "aws_dynamodb_table" "dynamodb_terraform_state_lock" {
-  name         = "${var.dynamodb_table_name}-${formatdate("YYYYMMDDhhmmss", timestamp())}"
+  # name         = "${var.dynamodb_table_name}-${formatdate("YYYYMMDDhhmmss", timestamp())}"
+  name         = module.s3_bucket.s3_bucket_id
   hash_key     = "LockID"
   billing_mode = "PAY_PER_REQUEST"
   point_in_time_recovery {
@@ -81,4 +89,10 @@ resource "aws_s3_bucket_policy" "backend_bucket" {
     admin_arns    = jsonencode(var.admin_arns)
     s3_bucket_arn = module.s3_bucket.s3_bucket_arn
   })
+}
+
+resource "local_file" "terraform_backend_config" {
+  content         = templatefile("${path.module}/templates/backend.tf.tmpl", local.backend_content)
+  filename        = "backend.tf"
+  file_permission = "0644"
 }

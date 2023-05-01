@@ -1,0 +1,52 @@
+name: "Setup Tests for AWS IaC"
+
+description: "Checks out the code, sets up caches, pull/save/load docker build harness and configure AWS credentials."
+
+inputs:
+  aws-role-to-assume:
+    description: "The AWS role to assume to configure AWS credentials."
+    required: true
+  aws-region:
+    description: "The AWS region to deploy and test infrastructure in."
+    default: us-east-1
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Checkout the code"
+      uses: actions/checkout@v3
+
+    - name: Init gopath cache
+      uses: actions/cache@v3
+      with:
+        path: "${{ github.workspace }}/.cache/go"
+        key: "gopath|${{ hashFiles('.tool-versions') }}|${{ hashFiles('go.sum') }}"
+
+    - name: Init gobuild cache
+      uses: actions/cache@v3
+      with:
+        path: "${{ github.workspace }}/.cache/go-build"
+        key: "gobuild|${{ hashFiles('.tool-versions') }}|${{ hashFiles('go.sum') }}"
+
+    - name: Init docker cache
+      id: init-docker-cache
+      uses: actions/cache@v3
+      with:
+        path: "${{ github.workspace }}/.cache/docker"
+        key: "docker|${{ hashFiles('Makefile') }}"
+
+    - name: Docker save build harness
+      if: steps.init-docker-cache.outputs.cache-hit != 'true'
+      run: |
+        make docker-save-build-harness
+
+    - name: Load build harness
+      run: |
+        make docker-load-build-harness
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: ${{ inputs.aws-role-to-assume }}
+        role-session-name: ${{ github.event.client_payload.pull_request.head.sha || github.sha }}

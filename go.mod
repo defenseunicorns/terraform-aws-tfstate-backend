@@ -3,7 +3,7 @@ module github.com/defenseunicorns/terraform-aws-tfstate-backend
 go 1.20
 
 require (
-	github.com/gruntwork-io/terratest v0.41.20
+	github.com/gruntwork-io/terratest v0.41.23
 	github.com/stretchr/testify v1.8.2
 )
 

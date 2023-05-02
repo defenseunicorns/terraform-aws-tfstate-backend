@@ -14,7 +14,6 @@ Ensure Terraform is available on the local system and that the AWS CLI has the a
 To view examples for how you can leverage this tfstate-backend Module, please see the [examples](./examples) directory.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 No requirements.
@@ -23,8 +22,8 @@ No requirements.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.65.0 |
-| <a name="provider_local"></a> [local](#provider\_local) | 2.4.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+| <a name="provider_local"></a> [local](#provider\_local) | n/a |
 
 ## Modules
 
@@ -64,5 +63,4 @@ No requirements.
 |------|-------------|
 | <a name="output_tfstate_bucket_id"></a> [tfstate\_bucket\_id](#output\_tfstate\_bucket\_id) | Terraform State Bucket Name |
 | <a name="output_tfstate_dynamodb_table_name"></a> [tfstate\_dynamodb\_table\_name](#output\_tfstate\_dynamodb\_table\_name) | Terraform State DynamoDB Table Name |
-<!-- END_TF_DOCS -->
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

@@ -5,9 +5,6 @@ description: Checks out the code, sets up caches, pulls/saves/loads docker build
 runs:
   using: composite
   steps:
-    - name: Checkout the code
-      uses: actions/checkout@v3
-
     - name: Init gopath cache
       uses: actions/cache@v3
       with:
@@ -31,7 +28,9 @@ runs:
       if: steps.init-docker-cache.outputs.cache-hit != 'true'
       run: |
         make docker-save-build-harness
+      shell: bash
 
     - name: Load build harness
       run: |
         make docker-load-build-harness
+      shell: bash

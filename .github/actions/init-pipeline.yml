@@ -1,4 +1,4 @@
-name: Setup Tests for IaC
+name: Initialize Pipeline
 
 description: Checks out the code, sets up caches, pulls/saves/loads docker build harness image.
 

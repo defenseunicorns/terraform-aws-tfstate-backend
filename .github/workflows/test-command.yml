@@ -105,8 +105,8 @@ jobs:
           GITHUB_REF: ${{ github.event.client_payload.pull_request.head.ref || github.ref_name }}
           GITHUB_OWNER: ${{ github.event.client_payload.github.payload.repository.owner.login || github.repository_owner }}
 
-      - name: Setup Tests
-        uses: ./github/actions/setup.yml
+      - name: Initialize Pipeline
+        uses: ./github/actions/init-pipeline.yml
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2

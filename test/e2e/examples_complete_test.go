@@ -31,7 +31,7 @@ func TestExamplesComplete(t *testing.T) {
 	defer terraform.Destroy(t, terraformOptions)
 	terraform.InitAndApply(t, terraformOptions)
 
-	// Run 'terrafrom init -migrate-state -force-copy'
+	// Copy local state to s3
 	terraform.Init(t, terraformStateOptions)
 
 	s3BucketID := terraform.Output(t, terraformOptions, "tfstate_bucket_id")
@@ -43,26 +43,12 @@ func TestExamplesComplete(t *testing.T) {
 	assert.Equal(t, true, strings.HasPrefix(dynamoDbTableName, expectedDynamoDbTableNameStartsWith))
 
 	tfStateFile := path.Join(terraformDir, "terraform.tfstate")
-
-	// Remove .terraform dir and terraform state files
-	if err := os.RemoveAll(path.Join(terraformDir, ".terraform")); err != nil {
-		t.Error(err)
-	}
-	if err := os.Remove(tfStateFile); err != nil {
-		t.Error(err)
-	}
-	if err := os.Remove(path.Join(terraformDir, "terraform.tfstate.backup")); err != nil {
-		t.Error(err)
-	}
-
-	terraform.Init(t, terraformOptions)
-
 	terraform.RunTerraformCommand(t, terraformOptions, "state", "pull", ">", tfStateFile)
 
 	if err := os.Remove(path.Join(terraformDir, "backend.tf")); err != nil {
 		t.Error(err)
 	}
 
-	// Run 'terrafrom init -migrate-state -force-copy'
+	// Copy state from s3 back to local to run destroy
 	terraform.Init(t, terraformStateOptions)
 }

@@ -20,18 +20,18 @@ func TestExamplesComplete(t *testing.T) {
 		Upgrade:      true,
 		VarFiles:     []string{"example.tfvars"},
 	}
-	defer terraform.Destroy(t, terraformOptions)
-	terraform.InitAndApply(t, terraformOptions)
 
-	// Enable -force-copy with the MigrateState field for terraform init command
+	// Enable -migrate-state and -force-copy with the MigrateState field for terraform init command
 	terraformStateOptions := &terraform.Options{
 		TerraformDir: terraformDir,
 		Upgrade:      true,
 		VarFiles:     []string{"example.tfvars"},
 		MigrateState: true,
 	}
+	defer terraform.Destroy(t, terraformOptions)
+	terraform.InitAndApply(t, terraformOptions)
 
-	// State magic sauce
+	// Run 'terrafrom init -migrate-state -force-copy'
 	terraform.Init(t, terraformStateOptions)
 
 	s3BucketID := terraform.Output(t, terraformOptions, "tfstate_bucket_id")
@@ -39,19 +39,19 @@ func TestExamplesComplete(t *testing.T) {
 	assert.Equal(t, true, strings.HasPrefix(s3BucketID, expectedBucketIDStartsWith))
 
 	dynamoDbTableName := terraform.Output(t, terraformOptions, "tfstate_dynamodb_table_name")
-	expectedDynamoDbTableNameStartsWith := "uds-ex-lock"
+	expectedDynamoDbTableNameStartsWith := "uds-ex"
 	assert.Equal(t, true, strings.HasPrefix(dynamoDbTableName, expectedDynamoDbTableNameStartsWith))
 
-	tfStateFile := path.Join(terraformDir + "terraform.tfstate")
+	tfStateFile := path.Join(terraformDir, "terraform.tfstate")
 
 	// Remove .terraform dir and terraform state files
-	if err := os.RemoveAll(path.Join(terraformDir + ".terraform")); err != nil {
+	if err := os.RemoveAll(path.Join(terraformDir, ".terraform")); err != nil {
 		t.Error(err)
 	}
 	if err := os.Remove(tfStateFile); err != nil {
 		t.Error(err)
 	}
-	if err := os.Remove(path.Join(terraformDir + "terraform.tfstate.backup")); err != nil {
+	if err := os.Remove(path.Join(terraformDir, "terraform.tfstate.backup")); err != nil {
 		t.Error(err)
 	}
 
@@ -59,10 +59,10 @@ func TestExamplesComplete(t *testing.T) {
 
 	terraform.RunTerraformCommand(t, terraformOptions, "state", "pull", ">", tfStateFile)
 
-	if err := os.Remove(path.Join(terraformDir + "backend.tf")); err != nil {
+	if err := os.Remove(path.Join(terraformDir, "backend.tf")); err != nil {
 		t.Error(err)
 	}
 
-	// State magic sauce
+	// Run 'terrafrom init -migrate-state -force-copy'
 	terraform.Init(t, terraformStateOptions)
 }

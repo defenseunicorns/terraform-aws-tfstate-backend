@@ -51,4 +51,5 @@ func TestExamplesComplete(t *testing.T) {
 
 	// Copy state from s3 back to local to run destroy
 	terraform.Init(t, terraformStateOptions)
+
 }

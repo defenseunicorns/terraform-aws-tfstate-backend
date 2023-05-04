@@ -1,6 +1,6 @@
 name: Initialize Pipeline
 
-description: Checks out the code, sets up caches, pulls/saves/loads docker build harness image.
+description: Sets up caches, pulls/saves/loads docker build harness image.
 
 runs:
   using: composite

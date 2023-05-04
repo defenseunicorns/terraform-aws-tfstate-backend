@@ -42,6 +42,7 @@ func TestExamplesComplete(t *testing.T) {
 	expectedDynamoDbTableNameStartsWith := "uds-ex"
 	assert.Equal(t, true, strings.HasPrefix(dynamoDbTableName, expectedDynamoDbTableNameStartsWith))
 
+	// Copy state from s3 back to local to run destroy
 	tfStateFile := path.Join(terraformDir, "terraform.tfstate")
 	terraform.RunTerraformCommand(t, terraformOptions, "state", "pull", ">", tfStateFile)
 
@@ -49,6 +50,6 @@ func TestExamplesComplete(t *testing.T) {
 		t.Error(err)
 	}
 
-	// Copy state from s3 back to local to run destroy
+	// Setup terraform to use local state backend before destroy
 	terraform.Init(t, terraformStateOptions)
 }

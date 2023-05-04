@@ -1,28 +1,20 @@
 #!/bin/bash
 
-function get_plan_output() {
-    terraform init
-    terraform plan -out plan.json
-    terraform show -json plan.json | jq > pretty_plan.json
-    rm plan.json
-}
-
 function apply() {
     terraform init
     terraform apply --auto-approve
-    terraform init -force-copy
+    terraform init -force-copy # copy local state file to s3 and setup s3 as backend
 }
 
 function destroy() {
     rm -rf .terraform* terraform.tfstate*
     terraform init
-    terraform state pull > terraform.tfstate
-    terraform destroy -target=local_file.terraform_backend_config --auto-approve
-    terraform init -force-copy # needed after removing backend
+    terraform state pull > terraform.tfstate # pull the state from s3 to local file
+    terraform destroy -target=local_file.terraform_backend_config --auto-approve # delete backend.tf config file
+    terraform init -force-copy # setup local backend
     terraform destroy --auto-approve
-    rm -rf terraform.tfstate* .terraform terraform.tfvars pretty_plan.json
+    rm -rf terraform.tfstate* .terraform*
 }
 
-get_plan_output
 apply
 destroy

@@ -7,10 +7,8 @@ on:
     types: [test-command]
   pull_request:
     paths:
-      - "**.yml"
-    paths-ignore:
-      - "**.md"
-      - ".github/"
+      - "**.tf"
+      - "**.go"
 
   push:
     branches:

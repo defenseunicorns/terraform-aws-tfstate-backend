@@ -64,8 +64,7 @@ jobs:
             done
           fi
           for out in "${COMMANDS[@]}"; do
-            printf "::set-output name=%s::%s\n" "${out,,}" "${!out:-false}"
-            printf "%s=%s\n" "${out,,}" "${!out:-false}"
+            printf "%s=%s\n" "${out,,}" "${!out:-false}" >> $GITHUB_OUTPUT
           done
 
   # Run the E2E tests

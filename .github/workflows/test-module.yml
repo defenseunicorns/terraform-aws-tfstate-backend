@@ -5,6 +5,10 @@ name: test
 on:
   repository_dispatch:
     types: [test-command]
+  pull_request:
+    paths-ignore:
+      - "**.md"
+
   push:
     branches:
       - main

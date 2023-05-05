@@ -34,6 +34,3 @@ repos:
         verbose: true
         args:
           - --args=--config-file __GIT_WORKING_DIR__/.checkov.yml
-#      - id: terraform_tflint
-#      - id: terraform_tfsec
-#      - id: terraform_validate

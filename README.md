@@ -11,19 +11,37 @@ Ensure Terraform is available on the local system and that the AWS CLI has the a
 
 ### Examples
 
-To view examples for how you can leverage this tfstate-backend Module, please see the [examples](./examples) directory.
+To view examples of how you can leverage this tfstate-backend Module, please see the [examples](./examples) directory.
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+### Testing
+
+- `make test` will execute the tests the same way they run in CI
+- `make run-pre-commit-hooks` will run linting and formatting checks and will fix most errors automatically.
+
+If opening a PR, opening it in `draft` status will prevent the CI tests from running automatically. This will prevent executing tests that generate real AWS resources on every push until the PR is ready to review.
+
+### Testing
+
+- `make test` will execute the tests the same way they run in CI
+- `make run-pre-commit-hooks` will run linting and formatting checks and will fix most errors automatically.
+
+If opening a PR, opening it in `draft` status will prevent the CI tests from running automatically. This will prevent executing tests that generate real AWS resources on every push until the PR is ready to review.
+
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.47 |
+| <a name="requirement_local"></a> [local](#requirement\_local) | >= 2.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
-| <a name="provider_local"></a> [local](#provider\_local) | n/a |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.47 |
+| <a name="provider_local"></a> [local](#provider\_local) | >= 2.1 |
 
 ## Modules
 
@@ -63,4 +81,4 @@ No requirements.
 |------|-------------|
 | <a name="output_tfstate_bucket_id"></a> [tfstate\_bucket\_id](#output\_tfstate\_bucket\_id) | Terraform State Bucket Name |
 | <a name="output_tfstate_dynamodb_table_name"></a> [tfstate\_dynamodb\_table\_name](#output\_tfstate\_dynamodb\_table\_name) | Terraform State DynamoDB Table Name |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->

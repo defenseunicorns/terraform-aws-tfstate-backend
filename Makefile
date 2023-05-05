@@ -24,10 +24,6 @@ help: ## Show a list of all targets
 	| sed -n 's/^\(.*\): \(.*\)##\(.*\)/\1:\3/p' \
 	| column -t -s ":"
 
-.PHONY: test-test
-test-test:
-	echo "Fake test for pipeline refactoring"
-
 .PHONY: test
 test: ## Run all automated tests. Requires access to an AWS account. Costs real money.
 	mkdir -p .cache/go

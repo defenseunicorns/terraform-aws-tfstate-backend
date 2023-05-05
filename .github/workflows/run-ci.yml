@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
-   types: [opened, reopened, synchronize]
+   types: [opened, reopened, synchronize, ready_for_review]
    branches:
      - main
    paths:
@@ -25,7 +25,7 @@ jobs:
   run-test:
     name: Test Component
     runs-on: ubuntu-latest
-    # Only run when the pull request is not in draft status\
+    # Only run when the pull request is not in draft status
     if: github.event.pull_request.draft == false
     steps:
 

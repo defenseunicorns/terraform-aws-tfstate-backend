@@ -15,7 +15,7 @@ In ADR (0002-use-slash-command-dispatch-to-trigger-automated-tests)(doc/adr/0002
 3. 3rd party contributors may fully participate in the development process, rather than being forced to have a maintainer copy their branch to the repo and create a PR on their behalf.
 
 After using this workflow, the impact of this is long feedback loops and a poor developer experience. It adds complexity to the developer, the maintainer, and the pipeline configurations and duplicates native functionality in GitHub.
-  
+
 ## Decision
 
 To mitigate the problems above with a better developer experience, we ran several experiments and have decided on the following:

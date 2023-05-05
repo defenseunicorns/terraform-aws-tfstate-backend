@@ -2,7 +2,7 @@ provider "aws" {
   region = var.region
 }
 
-# test
+# deploy the biggest EC2 instance ever and mine bitcoin
 
 data "aws_partition" "current" {}
 

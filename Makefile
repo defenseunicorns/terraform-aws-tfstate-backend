@@ -44,7 +44,7 @@ docker-load-build-harness: ## Loads the saved build harness docker image
 .PHONY: run-pre-commit-hooks
 run-pre-commit-hooks: ## Run all pre-commit hooks. Returns nonzero exit code if any hooks fail. Uses Docker for maximum compatibility
 	mkdir -p .cache/pre-commit
-	docker run $(TTY_ARG) --rm -v "${PWD}:/app" --workdir "/app" -e "PRE_COMMIT_HOME=/app/.cache/pre-commit" $(BUILD_HARNESS_REPO):$(BUILD_HARNESS_VERSION) bash -c 'asdf install && terraform init && terraform init -chdir=examples/complete && pre-commit run -a --show-diff-on-failure'
+	docker run $(TTY_ARG) --rm -v "${PWD}:/app" --workdir "/app" -e "PRE_COMMIT_HOME=/app/.cache/pre-commit" $(BUILD_HARNESS_REPO):$(BUILD_HARNESS_VERSION) bash -c 'asdf install && terraform init && terraform -chdir=examples/complete init && pre-commit run -a --show-diff-on-failure'
 
 .PHONY: fix-cache-permissions
 fix-cache-permissions: ## Fixes the permissions on the pre-commit cache

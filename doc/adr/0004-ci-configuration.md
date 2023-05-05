@@ -31,6 +31,5 @@ To mitigate the problems above with a better developer experience, we ran severa
 
 ## Consequences
 
-- Developers are free to push commits to their PR as often as they want and control when tests are run
-Maintainers can inspect the changes that are being made to ensure that they are safe to test before triggering the tests. `This is important since the tests create real AWS infrastructure that costs money. Mistakes that cause infinite loops could cause us to incur significant costs if we don't have a chance to inspect the changes before triggering the tests.`
+- Developers are free to push commits to their PR as often as they want and control when tests are run Maintainers can inspect the changes that are being made to ensure that they are safe to test before triggering the tests.
 - 3rd party contributors may fully participate in the development process.

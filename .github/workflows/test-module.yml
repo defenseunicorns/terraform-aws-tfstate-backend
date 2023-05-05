@@ -5,11 +5,6 @@ name: test
 on:
   repository_dispatch:
     types: [test-command]
-  pull_request:
-    paths:
-      - "**.tf"
-      - "**.go"
-
   push:
     branches:
       - main
@@ -29,6 +24,7 @@ jobs:
   parse:
     runs-on: ubuntu-latest
     outputs:
+      run-ping: ${{ steps.parse.outputs.ping }}
       run-build: ${{ steps.parse.outputs.build }}
       run-e2e: ${{ steps.parse.outputs.e2e }}
     steps:
@@ -49,7 +45,7 @@ jobs:
           printf "Event name is %s\n" "$EVENT_NAME"
           printf "Args are %s\n" "$ARGS"
           printf "\n\nslash_command is %s\n\n" "$DEBUG"
-          COMMANDS=(E2E)
+          COMMANDS=(PING E2E)
           if printf "%s" "${ARGS^^}" | grep -qE '\bALL\b'; then
             # "all" explicitly does not include "ping"
             for cmd in "${COMMANDS[@]}"; do
@@ -64,8 +60,28 @@ jobs:
             done
           fi
           for out in "${COMMANDS[@]}"; do
-            printf "%s=%s\n" "${out,,}" "${!out:-false}" >> $GITHUB_OUTPUT
+            printf "::set-output name=%s::%s\n" "${out,,}" "${!out:-false}"
+            printf "%s=%s\n" "${out,,}" "${!out:-false}"
           done
+
+  # Do a simple ping/pong status update to validate things are working
+  ping:
+    runs-on: ubuntu-latest
+    needs: parse
+    if: needs.parse.outputs.run-ping == 'true'
+    steps:
+      # Update GitHub status for dispatch events
+      - name: "Update GitHub Status for this ref"
+        uses: "docker://cloudposse/github-status-updater"
+        with:
+          args: "-action update_state -state success -ref ${{ github.event.client_payload.pull_request.head.sha }} -repo ${{ github.event.client_payload.github.payload.repository.name }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_CONTEXT: "test / ping (${{ github.event_name }})"
+          GITHUB_DESCRIPTION: "pong"
+          GITHUB_TARGET_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          GITHUB_REF: ${{ github.event.client_payload.pull_request.head.ref }}
+          GITHUB_OWNER: ${{ github.event.client_payload.github.payload.repository.owner.login }}
 
   # Run the E2E tests
   e2e:
@@ -73,6 +89,21 @@ jobs:
     needs: parse
     if: needs.parse.outputs.run-e2e == 'true'
     steps:
+      # Update GitHub status for pending pipeline run
+      - name: "Update GitHub Status for pending"
+        if: github.event_name == 'repository_dispatch'
+        uses: docker://cloudposse/github-status-updater
+        with:
+          args: "-action update_state -state pending -ref ${{ env.REPO_SHA }} -repo ${{ env.REPO_NAME }}"
+        env:
+          REPO_SHA: ${{ github.event.client_payload.pull_request.head.sha || github.sha }}
+          REPO_NAME: ${{ github.event.client_payload.github.payload.repository.name || github.event.repository.name }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_CONTEXT: "test / e2e (${{ github.event_name }})"
+          GITHUB_DESCRIPTION: "started by @${{ github.event.client_payload.github.actor || github.actor }}"
+          GITHUB_TARGET_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          GITHUB_REF: ${{ github.event.client_payload.pull_request.head.ref || github.ref_name }}
+          GITHUB_OWNER: ${{ github.event.client_payload.github.payload.repository.owner.login || github.repository_owner }}
 
       - name: Checkout the code
         uses: actions/checkout@v3
@@ -92,4 +123,52 @@ jobs:
           REPO_URL: https://github.com/${{ github.repository }}.git
           GIT_BRANCH: ${{ github.event.client_payload.pull_request.head.ref || github.ref_name }}
         run: |
-          make test
+          make test fix-cache-permissions
+
+      # Update GitHub status for failing pipeline run
+      - name: Update GitHub Status for failure
+        if: ${{ failure() && github.event_name == 'repository_dispatch' }}
+        uses: docker://cloudposse/github-status-updater
+        with:
+          args: "-action update_state -state failure -ref ${{ env.REPO_SHA }} -repo ${{ env.REPO_NAME }}"
+        env:
+          REPO_SHA: ${{ github.event.client_payload.pull_request.head.sha || github.sha }}
+          REPO_NAME: ${{ github.event.client_payload.github.payload.repository.name || github.event.repository.name }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_CONTEXT: "test / e2e (${{ github.event_name }})"
+          GITHUB_DESCRIPTION: "run failed"
+          GITHUB_TARGET_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          GITHUB_REF: ${{ github.event.client_payload.pull_request.head.ref || github.ref_name }}
+          GITHUB_OWNER: ${{ github.event.client_payload.github.payload.repository.owner.login || github.repository_owner }}
+
+      # Update GitHub status for successful pipeline run
+      - name: Update GitHub Status for success
+        if: github.event_name == 'repository_dispatch'
+        uses: docker://cloudposse/github-status-updater
+        with:
+          args: "-action update_state -state success -ref ${{ env.REPO_SHA }} -repo ${{ env.REPO_NAME }}"
+        env:
+          REPO_SHA: ${{ github.event.client_payload.pull_request.head.sha || github.sha }}
+          REPO_NAME: ${{ github.event.client_payload.github.payload.repository.name || github.event.repository.name }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_CONTEXT: "test / e2e (${{ github.event_name }})"
+          GITHUB_DESCRIPTION: "run passed"
+          GITHUB_TARGET_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          GITHUB_REF: ${{ github.event.client_payload.pull_request.head.ref || github.ref_name }}
+          GITHUB_OWNER: ${{ github.event.client_payload.github.payload.repository.owner.login || github.repository_owner }}
+
+      # Update GitHub status for cancelled pipeline run
+      - name: Update GitHub Status for cancelled
+        if: ${{ cancelled() && github.event_name == 'repository_dispatch' }}
+        uses: docker://cloudposse/github-status-updater
+        with:
+          args: "-action update_state -state error -ref ${{ env.REPO_SHA }} -repo ${{ env.REPO_NAME }}"
+        env:
+          REPO_SHA: ${{ github.event.client_payload.pull_request.head.sha || github.sha }}
+          REPO_NAME: ${{ github.event.client_payload.github.payload.repository.name || github.event.repository.name }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_CONTEXT: "test / e2e (${{ github.event_name }})"
+          GITHUB_DESCRIPTION: "run cancelled"
+          GITHUB_TARGET_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          GITHUB_REF: ${{ github.event.client_payload.pull_request.head.ref || github.ref_name }}
+          GITHUB_OWNER: ${{ github.event.client_payload.github.payload.repository.owner.login || github.repository_owner }}

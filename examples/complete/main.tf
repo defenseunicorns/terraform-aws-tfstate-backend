@@ -12,6 +12,7 @@ module "tfstate_backend" {
   versioning_enabled   = var.versioning_enabled
   admin_arns           = var.admin_arns
   permissions_boundary = var.permissions_boundary
+  force_destroy        = var.force_destroy
   logging_bucket_id    = module.s3_bucket_logging[0].s3_bucket_id
 }
 

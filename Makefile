@@ -1,6 +1,6 @@
 # The version of the build harness container to use
 BUILD_HARNESS_REPO := ghcr.io/defenseunicorns/not-a-build-harness/not-a-build-harness
-BUILD_HARNESS_VERSION := 0.0.7
+BUILD_HARNESS_VERSION := 0.0.16
 
 .DEFAULT_GOAL := help
 
@@ -29,7 +29,7 @@ test: ## Run all automated tests. Requires access to an AWS account. Costs real 
 	mkdir -p .cache/go
 	mkdir -p .cache/go-build
 	echo "Running automated tests. This will take several minutes. At times it does not log anything to the console. If you interrupt the test run you will need to log into AWS console and manually delete any orphaned infrastructure."
-	docker run $(TTY_ARG) --rm -v "${PWD}:/app" -v "${PWD}/.cache/go:/root/go" -v "${PWD}/.cache/go-build:/root/.cache/go-build" --workdir "/app/test/e2e" -e GOPATH=/root/go -e GOCACHE=/root/.cache/go-build -e REPO_URL -e GIT_BRANCH -e AWS_REGION -e AWS_DEFAULT_REGION -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -e AWS_SECURITY_TOKEN -e AWS_SESSION_EXPIRATION -e SKIP_SETUP -e SKIP_TEST -e SKIP_TEARDOWN $(BUILD_HARNESS_REPO):$(BUILD_HARNESS_VERSION) bash -c 'asdf install && go test -v -timeout 2h ./...'
+	docker run $(TTY_ARG) --rm -v "${PWD}:/app" -v "${PWD}/.cache/go:/root/go" -v "${PWD}/.cache/go-build:/root/.cache/go-build" --workdir "/app/test/e2e" -e GOPATH=/root/go -e GOCACHE=/root/.cache/go-build -e REPO_URL -e GIT_BRANCH -e AWS_REGION -e AWS_DEFAULT_REGION -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -e AWS_SECURITY_TOKEN -e AWS_SESSION_EXPIRATION -e SKIP_SETUP -e SKIP_TEST -e SKIP_TEARDOWN $(BUILD_HARNESS_REPO):$(BUILD_HARNESS_VERSION) bash -c 'asdf install && go test -count=1 -v -timeout 2h ./...'
 
 .PHONY: docker-save-build-harness
 docker-save-build-harness: ## Pulls the build harness docker image and saves it to a tarball

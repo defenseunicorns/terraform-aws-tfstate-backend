@@ -18,7 +18,7 @@ After using this workflow, the impact of this is long feedback loops and a poor 
   
 ## Decision
 
-To mitigate the problems above with a better developer experience, we ran some experiments and have decided the following:
+To mitigate the problems above with a better developer experience, we ran several experiments and have decided on the following:
 
 - Implement action protections in GitHub to prevent forks from automatically triggering actions.
 `Settings --> Actions --> General --> Fork Pull Request Workflows --> Run workflows from fork pull requests --> Require approval for fork pull request workflows.`

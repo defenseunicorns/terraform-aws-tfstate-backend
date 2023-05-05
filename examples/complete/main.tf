@@ -2,6 +2,8 @@ provider "aws" {
   region = var.region
 }
 
+# test
+
 data "aws_partition" "current" {}
 
 module "tfstate_backend" {

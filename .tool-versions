@@ -11,7 +11,7 @@ terraform 1.4.6
 # renovate: datasource=github-tags depName=terraform-docs/terraform-docs
 terraform-docs 0.16.0
 # renovate: datasource=github-tags depName=terraform-linters/tflint
-tflint 0.44.1
+tflint 0.46.1
 # renovate: datasource=github-tags depName=aquasecurity/tfsec
 tfsec 1.28.1
 make 4.4

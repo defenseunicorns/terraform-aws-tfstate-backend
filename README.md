@@ -9,6 +9,13 @@ This repository contains Terraform configuration files that create various AWS r
 
 Ensure Terraform is available on the local system and that the AWS CLI has the appropriate credentials put in place.
 
+### Testing
+
+- `make test` will execute the tests the same way they run in CI
+- `make run-pre-commit-hooks` will run linting and formatting checks and will fix most errors automatically.
+
+If opening a PR, opening it in `draft` status will prevent the CI tests from running automatically. This will prevent executing tests that generate real AWS resources on every push until the PR is ready to review.
+
 ### Examples
 
 To view examples for how you can leverage this tfstate-backend Module, please see the [examples](./examples) directory.

@@ -21,6 +21,15 @@
         "BUILD_HARNESS_REPO := (?<depName>\\S+)\\nBUILD_HARNESS_VERSION := (?<currentValue>\\S+)"
       ],
       "datasourceTemplate": "docker"
+    },
+    // Custom regex manager for the .tool-versions file that follows the pattern documented here: https://docs.renovatebot.com/modules/manager/regex/#advanced-capture
+    {
+      "fileMatch": ["^.tool-versions$"],
+      "matchStrings": [
+        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*? (?<currentValue>.*)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver-coerced{{/if}}",
+      "extractVersionTemplate": "^v?(?<version>.*)$"
     }
   ]
 }

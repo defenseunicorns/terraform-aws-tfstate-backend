@@ -30,14 +30,18 @@ If opening a PR, opening it in `draft` status will prevent the CI tests from run
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.47 |
+| <a name="requirement_local"></a> [local](#requirement\_local) | >= 2.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.65.0 |
-| <a name="provider_local"></a> [local](#provider\_local) | 2.4.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.47 |
+| <a name="provider_local"></a> [local](#provider\_local) | >= 2.1 |
 
 ## Modules
 
@@ -78,3 +82,4 @@ No requirements.
 | <a name="output_tfstate_bucket_id"></a> [tfstate\_bucket\_id](#output\_tfstate\_bucket\_id) | Terraform State Bucket Name |
 | <a name="output_tfstate_dynamodb_table_name"></a> [tfstate\_dynamodb\_table\_name](#output\_tfstate\_dynamodb\_table\_name) | Terraform State DynamoDB Table Name |
 <!-- END_TF_DOCS -->
+

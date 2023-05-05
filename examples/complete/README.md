@@ -26,27 +26,20 @@ Destroying the environment with Terraform requires a few more steps than ususal.
 1. Finally destroying resources with `terraform destroy -auto-approve`
 1. The S3 bucket may not be deleted and may have to be manually emptied before deletion. Ensure the state file has been bulled prior to clearing the bucket.
 
-
-!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-## Requirements
-
-No requirements.
-
-## Providers
-…| [aws_s3_bucket_policy.backend_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
-| [aws_s3_bucket_versioning.versioning](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_versioning) | resource |
-| [local_file.terraform_backend_config](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
-| [aws_partition.current](https://registry.terraform.io/provi
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.47 |
+| <a name="requirement_local"></a> [local](#requirement\_local) | >= 2.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.65.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.66.1 |
 
 ## Modules
 

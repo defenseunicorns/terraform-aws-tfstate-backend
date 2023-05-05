@@ -4,7 +4,7 @@ Date: 2023-04-26
 
 ## Status
 
-Replaced by (0004-ci-configuration)[0004-ci-configuration.md]
+Accepted
 
 ## Context
 

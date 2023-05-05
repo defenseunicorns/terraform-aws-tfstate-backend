@@ -30,6 +30,8 @@ repos:
     hooks:
       - id: terraform-docs-go
         args: ["markdown", "table", "--output-file", "README.md", "."]
+      - id: terraform-docs-go-complete-example
+        args: ["markdown", "table", "--output-file", "README.md", "examples/complete"]
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.78.0
     hooks:

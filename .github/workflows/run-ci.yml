@@ -26,7 +26,7 @@ jobs:
     name: Test Component
     runs-on: ubuntu-latest
     # Only run when the pull request is not in draft status\
-    if: github.event.pull_request.draft == false
+    #if: github.event.pull_request.draft == false
     steps:
 
       - name: Checkout the code

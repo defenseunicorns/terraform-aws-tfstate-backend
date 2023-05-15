@@ -1,0 +1,23 @@
+---
+kind: ZarfPackageConfig
+metadata:
+  name: terraform-aws-tfstate-backend
+  description: "Terraform state backend"
+components:
+  - name: backend-init
+    actions:
+      onCreate:
+        before:
+          - cmd: "ls -lsa"
+    files:
+      - source: "locals.tf"
+        target: "tmp/backend/"
+      - source: "main.tf"
+        target: "tmp/backend/"
+      - source: "outputs.tf"
+        target: "tmp/backend/"
+      - source: "variables.tf"
+        target: "tmp/backend/"
+      - source: "versions.tf"
+        target: "tmp/backend/"
+

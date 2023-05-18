@@ -7,6 +7,8 @@ components:
   - name: backend-init
     actions:
       onCreate:
+        defaults:
+          dir: "./"
         before:
           - cmd: "ls -lsa"
     files:
@@ -20,4 +22,29 @@ components:
         target: "tmp/backend/"
       - source: "versions.tf"
         target: "tmp/backend/"
+
+  - name: backend
+    actions:
+      onDeploy:
+        before:
+          - cmd: "ls -lsa"
+          - cmd: "terraform init"
+          - cmd: "terraform apply --auto-approve"
+          - cmd: "terraform init -force-copy"
+          - cmd: "mkdir cache"
+          - cmd: "cp backend.tf cache/"
+
+  - name: backend-destroy
+    actions:
+      onDeploy:
+        before:
+          - cmd: "cp cache/backend.tf backend.tf"
+          - cmd: "pwd"
+          - cmd: "ls -lsa"
+          - cmd: "terraform init"
+          - cmd: "terraform state pull > terraform.tfstate"
+          - cmd: "terraform destroy -targe=local_file.terraform_backend_config --auto-approve"
+          - cmd: "terraform init -force-copy"
+          - cmd: "terraform destroy --auto-approve"
+          - cmd: "rm -rf terraform.tfstate* .terraform"
 

@@ -43,7 +43,7 @@ components:
           - cmd: "ls -lsa"
           - cmd: "terraform init"
           - cmd: "terraform state pull > terraform.tfstate"
-          - cmd: "terraform destroy -targe=local_file.terraform_backend_config --auto-approve"
+          - cmd: "terraform destroy -target=local_file.terraform_backend_config --auto-approve"
           - cmd: "terraform init -force-copy"
           - cmd: "terraform destroy --auto-approve"
           - cmd: "rm -rf terraform.tfstate* .terraform"

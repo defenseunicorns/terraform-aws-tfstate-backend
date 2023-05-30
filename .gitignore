@@ -37,3 +37,4 @@ examples/complete/.terraform.lock.hcl
 terraform.tfvars
 backend.tf*
 .terraform.lock.hcl
+*.tar.zst

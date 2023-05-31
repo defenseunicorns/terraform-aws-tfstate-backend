@@ -5,6 +5,7 @@ import (
 	"path"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/stretchr/testify/assert"
@@ -19,6 +20,11 @@ func TestExamplesComplete(t *testing.T) {
 		TerraformDir: terraformDir,
 		Upgrade:      true,
 		VarFiles:     []string{"example.tfvars"},
+		RetryableTerraformErrors: map[string]string{
+			".*empty output.*": "bug in aws_s3_bucket_logging, intermittent error",
+		},
+		MaxRetries:         5,
+		TimeBetweenRetries: 5 * time.Second,
 	}
 
 	// Enable -migrate-state and -force-copy with the MigrateState field for terraform init command
@@ -27,6 +33,11 @@ func TestExamplesComplete(t *testing.T) {
 		Upgrade:      true,
 		VarFiles:     []string{"example.tfvars"},
 		MigrateState: true,
+		RetryableTerraformErrors: map[string]string{
+			".*empty output.*": "bug in aws_s3_bucket_logging, intermittent error",
+		},
+		MaxRetries:         5,
+		TimeBetweenRetries: 5 * time.Second,
 	}
 	defer terraform.Destroy(t, terraformOptions)
 	terraform.InitAndApply(t, terraformOptions)

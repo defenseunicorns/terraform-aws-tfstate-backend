@@ -26,19 +26,20 @@ components:
   - name: backend
     actions:
       onDeploy:
+        default:
+          dir: tmp/backend
         before:
+          - cmd: "test -d ./tmp/ && chmod -R ugo+rwx ./tmp/ || echo $?"
+            dir: /
           - cmd: "ls -lsa"
           - cmd: "terraform init"
           - cmd: "terraform apply --auto-approve"
           - cmd: "terraform init -force-copy"
-          - cmd: "mkdir cache"
-          - cmd: "cp backend.tf cache/"
 
   - name: backend-destroy
     actions:
       onDeploy:
         before:
-          - cmd: "cp cache/backend.tf backend.tf"
           - cmd: "pwd"
           - cmd: "ls -lsa"
           - cmd: "terraform init"

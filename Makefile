@@ -49,3 +49,11 @@ run-pre-commit-hooks: ## Run all pre-commit hooks. Returns nonzero exit code if 
 .PHONY: fix-cache-permissions
 fix-cache-permissions: ## Fixes the permissions on the pre-commit cache
 	docker run $(TTY_ARG) --rm -v "${PWD}:/app" --workdir "/app" -e "PRE_COMMIT_HOME=/app/.cache/pre-commit" $(BUILD_HARNESS_REPO):$(BUILD_HARNESS_VERSION) chmod -R a+rx .cache
+
+.PHONY: deploy
+deploy-module: ## publish package
+	docker run $(TTY_ARG) --rm -v "${PWD}:/app" --workdir "/app" $(BUILD_HARNESS_REPO):$(BUILD_HARNESS_VERSION) bash -c './apply-teardown.sh apply us-east-1 my-state-bucket-test'
+
+.PHONY: destroy
+deploy-module: ## destroy package
+	docker run $(TTY_ARG) --rm -v "${PWD}:/app" --workdir "/app" $(BUILD_HARNESS_REPO):$(BUILD_HARNESS_VERSION) bash -c './apply-teardown.sh destroy us-east-1 my-state-bucket-test'

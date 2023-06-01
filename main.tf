@@ -95,3 +95,10 @@ resource "local_file" "terraform_backend_config" {
   filename        = "backend.tf"
   file_permission = "0644"
 }
+
+resource "aws_ssm_parameter" "backend" {
+  name  = "/tfbackend/${var.bucket_prefix}"
+  type  = "String"
+  value = templatefile("${path.module}/templates/backend.tf.tmpl", local.backend_content)
+  tags = var.tags
+}

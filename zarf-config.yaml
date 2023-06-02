@@ -3,8 +3,8 @@ package:
     max_package_size: 0
   deploy:
     set:
-      bucket_prefix: "wtc" # S3 Bucket Prefix
-      dynamodb_table_name: "wtc" # DynamoDB Table Name
+      bucket_prefix: "tstcfg" # S3 Bucket Prefix
+      dynamodb_table_name: "tstcfg" # DynamoDB Table Name
       force_destroy: true # (Optional, Default:false ) A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable.
       # permissions_boundary: # (Optional) The ARN of the policy that is used to set the permissions boundary for the role.
       region: "us-east-2" # AWS Region

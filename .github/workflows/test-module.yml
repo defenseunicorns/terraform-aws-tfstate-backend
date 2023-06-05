@@ -11,6 +11,8 @@ on:
       - ready_for_review
     branches:
       - main
+    paths-ignore:
+      - "**.md"
 
 permissions:
   id-token: write

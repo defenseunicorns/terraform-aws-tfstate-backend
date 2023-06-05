@@ -2,7 +2,6 @@ package test_test
 
 import (
 	"github.com/stretchr/testify/assert"
-	"os"
 	"strings"
 	"testing"
 	"time"
@@ -18,6 +17,10 @@ func TestExamplesComplete(t *testing.T) {
 		TerraformDir: tempFolder,
 		Upgrade:      true,
 		VarFiles:     []string{"example.tfvars"},
+		Vars: map[string]interface{}{
+			// Creating the backend.tf file would create issues with the test pipeline, since Terraform will throw an error saying "Backend initialization required, please run "terraform init". To avoid that, we'll skip the creation of the backend.tf file.
+			"create_backend_file": false,
+		},
 		RetryableTerraformErrors: map[string]string{
 			".*empty output.*": "bug in aws_s3_bucket_logging, intermittent error",
 		},
@@ -36,12 +39,6 @@ func TestExamplesComplete(t *testing.T) {
 	// Set up the infra
 	teststructure.RunTestStage(t, "SETUP", func() {
 		terraform.InitAndApply(t, terraformOptions)
-		// Assert that the backend.tf file exists
-		_, err := os.Stat(tempFolder + "/backend.tf")
-		assert.Equal(t, nil, err)
-		// Delete the backend.tf file (In the test pipeline we won't bother with migrating the state. We trust that Hashicorp already tests that functionality in their own tests)
-		err = os.Remove(tempFolder + "/backend.tf")
-		assert.Equal(t, nil, err)
 	})
 
 	// Run assertions

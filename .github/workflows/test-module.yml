@@ -46,8 +46,5 @@ jobs:
           aws-region: us-east-1
 
       - name: Run live infra tests
-        env:
-          REPO_URL: https://github.com/${{ github.repository }}.git
-          GIT_BRANCH: ${{ github.event.client_payload.pull_request.head.ref || github.ref_name }}
         run: |
           make test

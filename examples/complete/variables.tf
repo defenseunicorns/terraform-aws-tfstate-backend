@@ -36,3 +36,9 @@ variable "force_destroy" {
   type        = bool
   default     = false
 }
+
+variable "create_backend_file" {
+  description = "(Optional, Default:true) If true, creates a backend.tf file automatically"
+  type        = bool
+  default     = true
+}

@@ -13,4 +13,5 @@ module "tfstate_backend" {
   admin_arns           = var.admin_arns
   permissions_boundary = var.permissions_boundary
   force_destroy        = var.force_destroy
+  create_backend_file  = var.create_backend_file
 }

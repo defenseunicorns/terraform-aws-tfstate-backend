@@ -1,23 +1,21 @@
 package test_test
 
 import (
+	"github.com/stretchr/testify/assert"
 	"os"
-	"path"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/gruntwork-io/terratest/modules/terraform"
-	"github.com/stretchr/testify/assert"
+	teststructure "github.com/gruntwork-io/terratest/modules/test-structure"
 )
 
 func TestExamplesComplete(t *testing.T) {
 	t.Parallel()
-
-	terraformDir := "../../examples/complete"
-
+	tempFolder := teststructure.CopyTerraformFolderToTemp(t, "../..", "examples/complete")
 	terraformOptions := &terraform.Options{
-		TerraformDir: terraformDir,
+		TerraformDir: tempFolder,
 		Upgrade:      true,
 		VarFiles:     []string{"example.tfvars"},
 		RetryableTerraformErrors: map[string]string{
@@ -27,40 +25,33 @@ func TestExamplesComplete(t *testing.T) {
 		TimeBetweenRetries: 5 * time.Second,
 	}
 
-	// Enable -migrate-state and -force-copy with the MigrateState field for terraform init command
-	terraformStateOptions := &terraform.Options{
-		TerraformDir: terraformDir,
-		Upgrade:      true,
-		VarFiles:     []string{"example.tfvars"},
-		MigrateState: true,
-		RetryableTerraformErrors: map[string]string{
-			".*empty output.*": "bug in aws_s3_bucket_logging, intermittent error",
-		},
-		MaxRetries:         5,
-		TimeBetweenRetries: 5 * time.Second,
-	}
-	defer terraform.Destroy(t, terraformOptions)
-	terraform.InitAndApply(t, terraformOptions)
+	// Defer the teardown
+	defer func() {
+		t.Helper()
+		teststructure.RunTestStage(t, "TEARDOWN", func() {
+			terraform.Destroy(t, terraformOptions)
+		})
+	}()
 
-	// Copy local state to s3
-	terraform.Init(t, terraformStateOptions)
+	// Set up the infra
+	teststructure.RunTestStage(t, "SETUP", func() {
+		terraform.InitAndApply(t, terraformOptions)
+		// Assert that the backend.tf file exists
+		_, err := os.Stat(tempFolder + "/backend.tf")
+		assert.Equal(t, nil, err)
+		// Delete the backend.tf file (In the test pipeline we won't bother with migrating the state. We trust that Hashicorp already tests that functionality in their own tests)
+		err = os.Remove(tempFolder + "/backend.tf")
+		assert.Equal(t, nil, err)
+	})
 
-	s3BucketID := terraform.Output(t, terraformOptions, "tfstate_bucket_id")
-	expectedBucketIDStartsWith := "uds-ex"
-	assert.Equal(t, true, strings.HasPrefix(s3BucketID, expectedBucketIDStartsWith))
+	// Run assertions
+	teststructure.RunTestStage(t, "TEST", func() {
+		s3BucketID := terraform.Output(t, terraformOptions, "tfstate_bucket_id")
+		expectedBucketIDStartsWith := "uds-ex"
+		assert.Equal(t, true, strings.HasPrefix(s3BucketID, expectedBucketIDStartsWith))
 
-	dynamoDbTableName := terraform.Output(t, terraformOptions, "tfstate_dynamodb_table_name")
-	expectedDynamoDbTableNameStartsWith := "uds-ex"
-	assert.Equal(t, true, strings.HasPrefix(dynamoDbTableName, expectedDynamoDbTableNameStartsWith))
-
-	// Copy state from s3 back to local to run destroy
-	tfStateFile := path.Join(terraformDir, "terraform.tfstate")
-	terraform.RunTerraformCommand(t, terraformOptions, "state", "pull", ">", tfStateFile)
-
-	if err := os.Remove(path.Join(terraformDir, "backend.tf")); err != nil {
-		t.Error(err)
-	}
-
-	// Setup terraform to use local state backend before destroy
-	terraform.Init(t, terraformStateOptions)
+		dynamoDbTableName := terraform.Output(t, terraformOptions, "tfstate_dynamodb_table_name")
+		expectedDynamoDbTableNameStartsWith := "uds-ex"
+		assert.Equal(t, true, strings.HasPrefix(dynamoDbTableName, expectedDynamoDbTableNameStartsWith))
+	})
 }

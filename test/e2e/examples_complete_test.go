@@ -15,7 +15,7 @@ func TestExamplesComplete(t *testing.T) {
 	tempFolder := teststructure.CopyTerraformFolderToTemp(t, "../..", "examples/complete")
 	terraformOptions := &terraform.Options{
 		TerraformDir: tempFolder,
-		Upgrade:      true,
+		Upgrade:      false,
 		VarFiles:     []string{"example.tfvars"},
 		Vars: map[string]interface{}{
 			// Creating the backend.tf file would create issues with the test pipeline, since Terraform will throw an error saying "Backend initialization required, please run "terraform init". To avoid that, we'll skip the creation of the backend.tf file.

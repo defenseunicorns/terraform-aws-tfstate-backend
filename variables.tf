@@ -18,6 +18,7 @@ variable "bucket_prefix" {
 variable "dynamodb_table_name" {
   description = "DynamoDB Table Name"
   type        = string
+  default     = null
 }
 
 variable "versioning_enabled" {

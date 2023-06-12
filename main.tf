@@ -3,10 +3,9 @@ locals {
   backend_content = {
     region               = var.region
     bucket               = module.s3_bucket.s3_bucket_id
-    terraform_state_file = "tfstate/${var.region}/${local.bucket}-bucket.tfstate"
+    terraform_state_file = "tfstate/${var.region}/${module.s3_bucket.s3_bucket_id}-bucket.tfstate"
     dynamodb_table       = aws_dynamodb_table.dynamodb_terraform_state_lock.id
   }
-  bucket                 = var.bucket_prefix != null : module.s3_bucket.s3_bucket_id ? var.bucket
 }
 
 data "aws_partition" "current" {}
@@ -100,7 +99,7 @@ resource "local_file" "terraform_backend_config" {
 
 resource "aws_ssm_parameter" "backend" {
   count = var.generate_ssm_parameter : 1 ? 0
-  name  = "/tfbackend/${local.bucket}"
+  name  = "/tfbackend/${module.s3_bucket.s3_bucket_id}"
   type  = "String"
   value = templatefile("${path.module}/templates/backend.tf.tmpl", local.backend_content)
   tags = var.tags

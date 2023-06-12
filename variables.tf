@@ -3,9 +3,16 @@ variable "region" {
   type        = string
 }
 
-variable "bucket_prefix" {
-  description = "S3 Bucket Prefix"
+variable "bucket" {
+  description = "(Optional, Forces new resource) The name of the bucket. If omitted, Terraform will assign a random, unique name."
   type        = string
+  default     = null
+}
+
+variable "bucket_prefix" {
+  description = "(Optional, Forces new resource) Creates a unique bucket name beginning with the specified prefix. Conflicts with bucket."
+  type        = string
+  default     = null
 }
 
 variable "dynamodb_table_name" {
@@ -41,4 +48,16 @@ variable "tags" {
   description = "(Optional) A mapping of tags to assign kms and bucket resources."
   type        = map(string)
   default     = {}
+}
+
+variable "generate_backend_file" {
+  description = "Boolean variable for whether ir not to generate a backend.tf file"
+  type        = bool
+  default     = false
+}
+
+variable "generate_ssm_parameter" {
+  description = "Boolean variable for whether or not to generate a parameter store entry of the backend.tf file"
+  type        = bool
+  default     = false
 }

@@ -9,6 +9,6 @@ output "tfstate_dynamodb_table_name" {
 }
 
 output "tfstate_info_paramstore_path" {
-  value       = aws_ssm_parameter.backend.name
+  value       = aws_ssm_parameter.backend[0].name
   description = "Terraform State Paramstore Name"
 }

@@ -91,7 +91,7 @@ resource "aws_s3_bucket_policy" "backend_bucket" {
 }
 
 resource "local_file" "terraform_backend_config" {
-  count           = var.generate_backend_file : 1 : 0
+  count           = var.generate_backend_file : 1 ? 0
   content         = templatefile("${path.module}/templates/backend.tf.tmpl", local.backend_content)
   filename        = "backend.tf"
   file_permission = "0644"

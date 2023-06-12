@@ -91,14 +91,14 @@ resource "aws_s3_bucket_policy" "backend_bucket" {
 }
 
 resource "local_file" "terraform_backend_config" {
-  count           = var.generate_backend_file : 1 ? 0
+  count           = var.generate_backend_file ? 1 : 0
   content         = templatefile("${path.module}/templates/backend.tf.tmpl", local.backend_content)
   filename        = "backend.tf"
   file_permission = "0644"
 }
 
 resource "aws_ssm_parameter" "backend" {
-  count = var.generate_ssm_parameter : 1 ? 0
+  count = var.generate_ssm_parameter ? 1 : 0
   name  = "/tfbackend/${module.s3_bucket.s3_bucket_id}"
   type  = "String"
   value = templatefile("${path.module}/templates/backend.tf.tmpl", local.backend_content)

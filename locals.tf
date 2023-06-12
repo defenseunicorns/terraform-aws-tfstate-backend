@@ -1,5 +1,5 @@
 locals {
-  dynamo_name = var.dynamodb_table_name ? var.dynamodb_table_name : "${module.s3_bucket.s3_bucket_id}-lock"
+  dynamo_name = var.dynamodb_table_name != null ? var.dynamodb_table_name : "${module.s3_bucket.s3_bucket_id}-lock"
   create_bucket_policy = length(var.admin_arns) > 0 ? true : false
   backend_content = {
     region               = var.region

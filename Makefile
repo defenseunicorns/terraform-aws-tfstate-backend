@@ -1,6 +1,6 @@
 # The version of the build harness container to use
 BUILD_HARNESS_REPO := ghcr.io/defenseunicorns/build-harness/build-harness
-BUILD_HARNESS_VERSION := 1.1.0
+BUILD_HARNESS_VERSION := 1.2.0
 
 .DEFAULT_GOAL := help
 

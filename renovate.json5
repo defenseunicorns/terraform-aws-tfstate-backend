@@ -22,15 +22,14 @@
     "enabled": true
   },
   "regexManagers": [
-    // Build Harness version
+    // Custom regex manager for the .env file that follows the pattern documented here: https://docs.renovatebot.com/modules/manager/regex/#advanced-capture
     {
-      "fileMatch": [
-        "^Makefile$"
-      ],
+      "fileMatch": ["^.env"],
       "matchStrings": [
-        "BUILD_HARNESS_REPO := (?<depName>\\S+)\\nBUILD_HARNESS_VERSION := (?<currentValue>\\S+)"
+        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_VERSION=(?<currentValue>.*)\\s"
       ],
-      "datasourceTemplate": "docker"
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver-coerced{{/if}}",
+      "extractVersionTemplate": "^v?(?<version>.*)$"
     },
     // Custom regex manager for the .tool-versions file that follows the pattern documented here: https://docs.renovatebot.com/modules/manager/regex/#advanced-capture
     {

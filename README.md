@@ -7,7 +7,7 @@ This repository contains Terraform configuration files that create various AWS r
 
 ## Getting Started
 
-Ensure Terraform is available on the local system and that the AWS CLI has the appropriate credentials put in place.
+Ensure Terraform is available on your local system and that the AWS CLI has the appropriate credentials put in place.
 
 ### Examples
 

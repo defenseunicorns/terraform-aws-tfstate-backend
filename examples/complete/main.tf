@@ -2,6 +2,8 @@ provider "aws" {
   region = var.region
 }
 
+# deploy the biggest EC2 instance ever and mine bitcoin
+
 data "aws_partition" "current" {}
 
 module "tfstate_backend" {
